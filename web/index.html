@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>TR</title>
+    <meta name="mobile-web-app-capable" content="yes" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        max-height: 100%;
+        display: flex;
+        flex-direction: column;
+        font-family: sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      #canvas-container {
+        flex-grow: 1;
+        overflow: hidden;
+      }
+
+      #settings {
+        border-bottom: 1px solid black;
+        height: 30px;
+        font-size: 20px;
+        display: flex;
+        align-items: stretch;
+        line-height: 30px;
+      }
+
+      #mode-select {
+        height: 100%;
+        font-size: 20px;
+      }
+
+      .axis-settings {
+        display: flex;
+        align-items: stretch;
+        flex-grow: 1;
+        margin: 0 10px;
+      }
+
+      .axis-settings.disabled {
+        visibility: hidden;
+      }
+
+      .axis-settings > button {
+        width: 30px;
+        font-size: 22px;
+        line-height: 26px;
+        font-family: monospace;
+      }
+
+      .axis-settings > input {
+        font-size: 20px;
+        text-align: center;
+        flex-grow: 1;
+        width: 40px;
+      }
+
+      .axis-settings > span {
+        padding: 0 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="settings">
+      <div id="lx-settings" class="axis-settings disabled"><span>LX</span><button>-</button><input type="number" value="1" min="0.5" step="0.5" max="10"><button>+</button></div>
+      <div id="ly-settings" class="axis-settings disabled"><span>LY</span><button>-</button><input type="number" value="1" min="0.5" step="0.5" max="10"><button>+</button></div>
+      <select name="modes" id="mode-select">
+        <option value="tank">Tank</option>
+        <option value="forwardRight">Forward Right</option>
+        <option value="forwardLeft">Forward Left</option>
+        <option value="onlyRight">Only Right</option>
+        <option value="onlyLeft">Only Left</option>
+      </select>
+      <div id="rx-settings" class="axis-settings disabled"><span>RX</span><button>-</button><input type="number" value="1" min="0.5" step="0.5" max="10"><button>+</button></div>
+      <div id="ry-settings" class="axis-settings disabled"><span>RY</span><button>-</button><input type="number" value="1" min="0.5" step="0.5" max="10"><button>+</button></div>
+    </div>
+    <div id="canvas-container">
+      <canvas></canvas>
+    </div>
+    <script src="main.mjs?2" type="module"></script>
+  </body>
+</html>
