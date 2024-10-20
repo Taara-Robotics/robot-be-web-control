@@ -101,7 +101,7 @@ async function connectSerialPort() {
     console.log('Found serial port', portPath);
 
     serialport = new SerialPort({
-        path: 'COM28',
+        path: portPath,
         baudRate: 115200,
     });
 
