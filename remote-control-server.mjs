@@ -56,6 +56,9 @@ wss.on('connection', (ws, req) => {
 
         if (ws === activeClientWebSocket) {
             activeClientWebSocket = null;
+
+            setVelocities([null, null]);
+
             serialPortDisconnectTimeout = setTimeout(() => {
                 disconnectSerialPort();
             }, serialPortDisconnectDelay);
