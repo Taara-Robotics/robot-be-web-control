@@ -8,6 +8,8 @@ const controlRadius = 150;
 const ui = {
   modeSelect: document.querySelector("#mode-select"),
   axisSettings: document.querySelectorAll(".axis-settings"),
+  smoothingInput: document.querySelector("#smoothing-settings input"),
+  smoothingButtons: document.querySelectorAll("#smoothing-settings button"),
 }
 
 const settings = {
@@ -24,7 +26,7 @@ const settings = {
 
 export const state = {
   maxVelocity: 1,
-  input: {vs: [null, null]},
+  input: {vs: [null, null], smoothing: 0.25},
   axes: [0, 0, 0, 0],
   touches: {},
 };
@@ -48,6 +50,20 @@ function initUI() {
       changeActiveModeAxisScale(aIndex, parseFloat(input.value));
     });
   }
+
+  ui.smoothingInput.addEventListener("input", (event) => {
+    state.input.smoothing = parseFloat(event.target.value);
+  });
+
+  ui.smoothingButtons[0].addEventListener("click", () =>{
+    ui.smoothingInput.stepDown();
+    state.input.smoothing = parseFloat(ui.smoothingInput.value);
+  });
+
+  ui.smoothingButtons[1].addEventListener("click", () =>{
+    ui.smoothingInput.stepUp();
+    state.input.smoothing = parseFloat(ui.smoothingInput.value);
+  });
 }
 
 function updateSettingsUI() {
@@ -75,6 +91,8 @@ function updateSettingsUI() {
       axisSetting.classList.remove('disabled');
     }
   }
+
+  ui.smoothingInput.value = state.input.smoothing;
 }
 
 function changeMode(mode) {

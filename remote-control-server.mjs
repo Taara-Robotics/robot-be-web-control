@@ -16,6 +16,7 @@ robotConfig.metricToRobot = 1 / (robotConfig.wheelRadius * 2 * Math.PI);
 let serialport = null;
 
 const wheelVelocities = [null, null];
+let smoothing = 0.25;
 
 const webUIPort = 8777;
 
@@ -133,10 +134,14 @@ function handleMessage(message, socket) {
     try {
         let info = JSON.parse(message);
 
-        console.log(info);
+        // console.log(info);
 
         if (Array.isArray(info.vs) && info.vs.length === 2) {
             setVelocities(info.vs);
+        }
+
+        if (isNumber(info.smoothing)) {
+            smoothing = info.smoothing;
         }
     } catch (e) {
         console.error(e);
@@ -147,15 +152,15 @@ function setVelocities(velocities, callback) {
     wheelVelocities[0] = velocities[0] ?? null;
     wheelVelocities[1] = velocities[1] ?? null;
 
-    for (const [i, velocity] of velocities.entries()) {
-        const id = i + 1;
+    // for (const [i, velocity] of velocities.entries()) {
+    //     const id = i + 1;
 
-        if (isNumber(velocity)) {
-            send(id, velocity);
-        } else {
-            sendStop(id);
-        }
-    }
+    //     if (isNumber(velocity)) {
+    //         send(id, velocity);
+    //     } else {
+    //         sendStop(id);
+    //     }
+    // }
 
     if (typeof callback === 'function') {
         callback();
@@ -163,6 +168,7 @@ function setVelocities(velocities, callback) {
 }
 
 function sendVelocities(velocities, callback) {
+    console.log('sendVelocities', velocities);
     for (const [i, velocity] of velocities.entries()) {
         const id = i + 1;
 
@@ -304,11 +310,9 @@ const smoothedVelocities = [0, 0];
 
 let sendInterval = setInterval(async () => {
     // smooth the input wheelVelocities
-    const smoothingFactor = 0.25;
-
     for (let i = 0; i < 2; i++) {
         const velocity = wheelVelocities[i] || 0;
-        smoothedVelocities[i] = smoothedVelocities[i] * smoothingFactor + velocity * (1 - smoothingFactor);
+        smoothedVelocities[i] = smoothedVelocities[i] * smoothing + velocity * (1 - smoothing);
 
         // Send null to stop motors if there is no input and the speed has been smoothed to zero
         if (!isNumber(wheelVelocities[i]) && Math.abs(smoothedVelocities[i]) < 0.01) {

@@ -18,9 +18,9 @@ function startSendInterval() {
       return;
     }
 
-    console.log(state.input.vs);
+    console.log(state.input.vs, state.input.smoothing);
 
-    wsSend({vs: state.input.vs});
+    wsSend({vs: state.input.vs, smoothing: state.input.smoothing});
 
     lastStateInput = structuredClone(state.input);
   }, 100);
