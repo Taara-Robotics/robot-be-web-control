@@ -299,6 +299,22 @@ process.on('uncaughtException', exitHandler.bind(null, {exit: true}));
 // sendStop(2);
 // await new Promise(resolve => setTimeout(resolve, 500));
 
+
+const smoothedVelocities = [0, 0];
+
 let sendInterval = setInterval(async () => {
-    sendVelocities(wheelVelocities);
+    // smooth the input wheelVelocities
+    const smoothingFactor = 0.25;
+
+    for (let i = 0; i < 2; i++) {
+        const velocity = wheelVelocities[i] || 0;
+        smoothedVelocities[i] = smoothedVelocities[i] * smoothingFactor + velocity * (1 - smoothingFactor);
+
+        // Send null to stop motors if there is no input and the speed has been smoothed to zero
+        if (!isNumber(wheelVelocities[i]) && Math.abs(smoothedVelocities[i]) < 0.01) {
+            smoothedVelocities[i] = null;
+        }
+    }
+
+    sendVelocities(smoothedVelocities);
 }, 50);
