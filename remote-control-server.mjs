@@ -167,8 +167,17 @@ function setVelocities(velocities, callback) {
     }
 }
 
+const prevSentVelocities = [null, null];
+
 function sendVelocities(velocities, callback) {
-    console.log('sendVelocities', velocities);
+
+    // Log changes
+    if (velocities[0] !== prevSentVelocities[0] || velocities[1] !== prevSentVelocities[1]) {
+        console.log('sendVelocities', velocities);
+        prevSentVelocities[0] = velocities[0];
+        prevSentVelocities[1] = velocities[1];
+    }
+    
     for (const [i, velocity] of velocities.entries()) {
         const id = i + 1;
 
